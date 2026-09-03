@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlyRank Capstone: Content Opportunity Scoring</title>
+    <meta name="description" content="Research paper on Refresh / Content Opportunity Scoring using a Random Forest model on FlyRank search data.">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header class="paper-header">
+        <h1 class="paper-title">Predicting Content Decay:<br>A Refresh Opportunity Scoring Model</h1>
+        <div class="authors">
+            <p><strong>FlyRank ML Internship Capstone</strong></p>
+        </div>
+    </header>
+
+    <main class="paper-content">
+        <section class="abstract">
+            <h2>Abstract</h2>
+            <p><strong>Question:</strong> Can we predict which web pages are experiencing traffic decay to proactively recommend content refreshes? <strong>Method:</strong> We applied a Random Forest Classifier to 90 days of historical search performance data, using a grouped split by client to prevent data leakage. <strong>Result:</strong> The model identified declining pages with a 57.0% Precision@100 on unseen clients, outperforming the 39.0% rule-based baseline. This paper presents the methodology and an actionable playbook for editorial teams to prioritize content updates, ultimately minimizing traffic loss and maximizing search recovery.</p>
+        </section>
+
+        <section class="paper-section">
+            <h2>1. Introduction & Problem Statement</h2>
+            <p>Content teams waste hours guessing which pages to update. While aggregate traffic metrics show overall site health, individual pages quietly decay due to staleness or shifting search intent. This research builds a predictive model to score "refresh opportunities." By isolating pages most likely to decline, we support editorial decision-making, allowing teams to allocate resources to the content with the highest potential for traffic recovery.</p>
+        </section>
+
+        <section class="paper-section">
+            <h2>2. Data</h2>
+            <p>The analysis is built on the FlyRank ML Internship dataset (<code>content_refresh_anonymized.csv</code>). This data reflects a 90-day historical window of anonymized search performance metrics across 32 clients.</p>
+            <ul>
+                <li><strong>Exclusions:</strong> We excluded pages with 0 impressions in the last 90 days and pages younger than 90 days. New or zero-visibility pages do not provide a reliable trend for decay prediction.</li>
+                <li><strong>Safety:</strong> The dataset is fully anonymized. No client names, domains, URLs, or private queries are included.</li>
+            </ul>
+        </section>
+
+        <section class="paper-section">
+            <h2>3. Methodology</h2>
+            <p>We engineered features representing historical footprint (e.g., <code>impressions_90d</code>, <code>days_with_impressions</code>) and page characteristics (<code>content_age_days</code>, <code>content_type</code>). The target label, <code>is_declining_label</code>, was defined as 1 if the overall trend was down, and 0 otherwise.</p>
+            
+            <h3>3.1 Model</h3>
+            <p>A Random Forest Classifier was chosen because it natively handles mixed feature types, captures non-linear relationships, and outputs probability scores for ranking.</p>
+            
+            <h3>3.2 Validation Design</h3>
+            <p>We utilized a Grouped Split by Client (80% train / 20% test). This strict validation prevents leakage, ensuring the model generalizes to new client contexts rather than memorizing domain-specific patterns.</p>
+            
+            <h3>3.3 Baseline</h3>
+            <p>We compared our model against a heuristic rule-based baseline: Position 11-20 AND Impressions > 1000 AND CTR < 1.5%.</p>
+        </section>
+
+        <section class="paper-section">
+            <h2>4. Results</h2>
+            <p>The Random Forest model was evaluated against the baseline on the same test split using <strong>Precision@100</strong> (the proportion of the top 100 recommended pages that were actually declining).</p>
+            
+            <figure class="chart-container">
+                <canvas id="resultsChart"></canvas>
+                <figcaption>Figure 1: Precision@100 comparison between Base Rate, Rule Baseline, and the Random Forest Model on the test split.</figcaption>
+            </figure>
+            
+            <p>The Random Forest significantly outperforms the heuristic baseline, demonstrating an 18 percentage point improvement in targeting accuracy (57.0% vs 39.0%). Feature importance analysis revealed that <code>days_with_impressions</code>, <code>log_impressions_90d</code>, and <code>avg_position</code> were the strongest predictors of decay.</p>
+        </section>
+
+        <section class="paper-section">
+            <h2>5. Limitations & Honest Framing</h2>
+            <ul>
+                <li><strong>Evergreen Content Misclassification:</strong> The model heavily associates staleness with decay, leading to false positives on some evergreen "keyword articles" that can maintain traffic for long periods without updates.</li>
+                <li><strong>Directional Proxy:</strong> This model is a directional prioritization tool, not a perfect oracle. It supports decision-making based on observed historical patterns but does not prove a causal guarantee that a refresh will increase traffic.</li>
+            </ul>
+        </section>
+
+        <section class="paper-section">
+            <h2>6. Ranked Recommendations (Action Playbook)</h2>
+            <div class="academic-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Priority Tier</th>
+                            <th>Action</th>
+                            <th>Criteria (Model Probability & Metrics)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>1. Immediate Refresh</strong></td>
+                            <td>Rewrite outdated sections, add fresh data/entities, optimize metadata.</td>
+                            <td>P(Decline) > 0.75, <code>impressions_90d</code> > 5000, <code>days_since_update</code> > 90</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2. Protect & Monitor</strong></td>
+                            <td>No major content changes. Monitor technical health and SERP features.</td>
+                            <td>P(Decline) < 0.3, Stable traffic trends</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3. Merge or Prune</strong></td>
+                            <td>Consolidate content into stronger pillar pages or implement 301 redirects.</td>
+                            <td>P(Decline) > 0.8, Near-zero traction over 90 days</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="paper-section">
+            <h2>7. Reproducibility</h2>
+            <p>All code, notebooks, and models used to generate this analysis are available in the public repository. Review the methodology and run the pipeline yourself at the following location:</p>
+            <p><strong>GitHub Repository:</strong> <a href="https://github.com/Imran0324/Ml-Internship-Assignment" target="_blank">Imran0324/Ml-Internship-Assignment</a></p>
+        </section>
+    </main>
+
+    <footer class="paper-footer">
+        <h2>8. Acknowledgments & Data Credit</h2>
+        <p>Built on the <a href="https://flyrank.ai" target="_blank" rel="noopener noreferrer">FlyRank ML Internship</a> dataset.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

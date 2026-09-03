@@ -1,0 +1,188 @@
+/* Academic Research Paper Styles */
+:root {
+    --bg-color: #ffffff;
+    --text-primary: #000000;
+    --text-secondary: #333333;
+    --border: #dddddd;
+    --font-main: "Times New Roman", Times, serif;
+    --font-sans: "Arial", Helvetica, sans-serif;
+    --link-color: #0000ee;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: var(--font-main);
+    line-height: 1.6;
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    font-size: 11pt;
+}
+
+/* Typography */
+h1, h2, h3, h4 {
+    font-family: var(--font-main);
+    color: var(--text-primary);
+    margin-bottom: 0.8rem;
+    margin-top: 1.5rem;
+}
+
+p {
+    margin-bottom: 1rem;
+    text-align: justify;
+    text-indent: 1.5rem;
+}
+
+/* Header */
+.paper-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.paper-title {
+    font-size: 24pt;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+}
+
+.authors {
+    font-size: 12pt;
+    margin-top: 1rem;
+}
+
+.authors p {
+    text-align: center;
+    text-indent: 0;
+}
+
+/* Abstract */
+.abstract {
+    margin: 0 2rem 2.5rem 2rem;
+}
+
+.abstract h2 {
+    text-align: center;
+    font-size: 12pt;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+
+.abstract p {
+    font-size: 10.5pt;
+    font-style: italic;
+}
+
+/* Sections */
+.paper-section {
+    margin-bottom: 2rem;
+}
+
+.paper-section h2 {
+    font-size: 14pt;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.paper-section h3 {
+    font-size: 12pt;
+    font-weight: bold;
+    font-style: italic;
+    margin-top: 1rem;
+}
+
+/* Lists */
+ul {
+    margin-bottom: 1rem;
+    padding-left: 3rem;
+}
+
+li {
+    margin-bottom: 0.5rem;
+    text-align: justify;
+}
+
+/* Table */
+.academic-table {
+    margin: 2rem 0;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-top: 2px solid var(--text-primary);
+    border-bottom: 2px solid var(--text-primary);
+    font-size: 10pt;
+}
+
+th, td {
+    padding: 0.5rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+th {
+    font-weight: bold;
+    border-bottom: 1px solid var(--text-primary);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Chart */
+.chart-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 2rem auto;
+    text-align: center;
+}
+
+figcaption {
+    font-size: 10pt;
+    margin-top: 1rem;
+    text-align: justify;
+}
+
+/* Links */
+a {
+    color: var(--link-color);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Footer / Acknowledgements */
+.paper-footer {
+    margin-top: 3rem;
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+}
+
+.paper-footer h2 {
+    font-size: 12pt;
+    text-transform: uppercase;
+}
+
+.paper-footer p {
+    text-indent: 0;
+    font-size: 10pt;
+}
+
+code {
+    font-family: monospace;
+    font-size: 0.9em;
+}
